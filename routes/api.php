@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BookController;
 use Illuminate\Http\Request;
@@ -30,6 +31,9 @@ Route::delete('categories/{id}' , [CategoryController::class,  'destroy']);
 Route::apiResource('books' , BookController::class);
 Route::apiResource('authors' , AuthorController::class);
 
+Route::post('login', [AuthController::class , 'login']);
+Route::post('register', [AuthController::class , 'register']);
+Route::post('logout', [AuthController::class , 'logout']);
 
 /** **************** test routes ***************/
 Route::get('env' , function(){

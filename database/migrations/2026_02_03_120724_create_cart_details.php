@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('authors', function (Blueprint $table) {
+        Schema::create('cart_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 70)->index();
-            $table->date('birth_date')->nullable();
-            $table->string('country')->nullable();
+            $table->foreignId('cart_id')->constrained();
+            $table->foreignId('book_id')->constrained();
+
+            $table->decimal('price', 10, 2);
+            $table->decimal('mortgage', 10, 2);
+
+            $table->timestamp('due_at');
+
             $table->timestamps();
         });
     }
@@ -25,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('authors');
+        Schema::dropIfExists('cart_details');
     }
 };

@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\ِAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthorController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,6 +21,9 @@ Route::get('test/{x}', function ($x1) {
 
 
 // Route::get('categories' , ['App\Http\Controllers\Api\CategoryController' , 'index']);
+Route::post('login', [ِAuthController::class , 'login']);
+
+
 
 Route::controller(CategoryController::class)
     ->prefix('categories')->group(

@@ -12,13 +12,14 @@ class CustomerController extends Controller
 {
     public function update(Request $request)
     {
-        $customer = $request->user()->customer;
+        $user = $request->user();
+        $customer = $user->customer;
         $supported_extensions = config('image.supported_extensions');
         $max_file_size =  config('image.max_file_size_small');
 
         $validated = $request->validate([
+            'email' => "required|email|unique:users,email,$user->id|max:255",
             'name' => 'required|string|max:255',
-            'gender' => 'required|in:F,M',
             'DOB' => 'required|date|before:today',
             'phone' => "required|digits:10|unique:customers,phone,$customer->id",
             'avatar' => "nullable|image|mimes:$supported_extensions|max:$max_file_size",
@@ -33,7 +34,7 @@ class CustomerController extends Controller
         $customer->update($validated);
 
         $customer->user()->update([
-            'email' => $request->email
+            'email' => $validated['email']
         ]);
 
         $customer->load('user');

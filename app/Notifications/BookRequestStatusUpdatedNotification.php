@@ -67,12 +67,20 @@ class BookRequestStatusUpdatedNotification extends Notification implements Shoul
      */
     public function toArray(object $notifiable): array
     {
+        $status = $this->bookRequest->status;
         $suffix = $this->bookRequest->author_name ? 'db_message_with_author' : 'db_message';
 
+        $book_display = $this->bookRequest->book_title;
+
+        if($this->bookRequest->book_author){
+            $book_display .= " by {$this->bookRequest->book_author}";
+        }
+        
         return [
             'request_id' => $this->bookRequest->id,
-            'status' => $this->bookRequest->status,
-            'message_key' => "notifications.request.status.{$this->bookRequest->status}.{$suffix}",
+            'status' => $status,
+            'title_key' => "notifications.book_request.status.{$status}.subject",
+            'message_key' => "notifications.request.status.{$status}.{$suffix}",
             'message_params' => [
                 'title' => $this->bookRequest->book_title,
                 'author' => $this->bookRequest->author_name,

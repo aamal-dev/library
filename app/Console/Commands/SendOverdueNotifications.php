@@ -28,13 +28,17 @@ class SendOverdueNotifications extends Command
      */
     public function handle()
     {
+        # To-Do: Edit This to make it from settings with correct key
+        #IDK the key currently so i set it by default to 0.01 from the figma design
+        $dailyFine = 0.01;
+
         $this->info('Scanning for overdue transactions...');
 
         $overdueRecords = Transaction::with(['bill.customer.user', 'book'])
             ->whereNull('returned_at') 
             ->whereNotNull('due_date')
             ->where('due_date', '<', now())
-            ->whereIn('status', ['received', 'expired'])
+            ->where('status', 'received')
             ->get();
 
         if ($overdueRecords->isEmpty()) {
@@ -47,14 +51,12 @@ class SendOverdueNotifications extends Command
         foreach ($overdueRecords as $transaction) {
             $daysLate = now()->diffInDays($transaction->due_date);
 
+            $transaction->processOverdueStep($dailyFine);
+
             $user = $transaction->bill->customer->user;
 
             if ($user && $transaction->book) {
                 $user->notify(new BookOverdueNotification($transaction->book, (int) $daysLate));
-
-                if ($transaction->status !== 'expired') {
-                    $transaction->update(['status' => 'expired']);
-                }
 
                 $notifiedCount++;
             }

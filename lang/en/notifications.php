@@ -43,4 +43,11 @@ return [
             'warning' => 'Please return this book as soon as possible to avoid any further late fees.',
             'db_message' => 'Your book ":title" is :days days overdue.',
     ],
+
+    'waiting_list' => [
+        'greeting' => 'Hi :name,',
+        'available_subject' => 'Book Available: :title',
+        'available_db_message' => 'Good news! The book ":title" is now available.',
+        'thanks' => 'Thank you for using our library!',
+    ],
 ];

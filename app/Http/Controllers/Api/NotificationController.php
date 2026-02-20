@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NotificationResource;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -17,26 +18,12 @@ class NotificationController extends Controller
     
             $notifications = $user->notifications()->latest()->get();
     
-            $notifications->transform(function($notification){
-                $data = $notification->data;
+            
     
-                $translatedMessage = null;
-                if (isset($data['message_key'])) {
-                    $translatedMessage = __($data['message_key'], $data['message_params'] ?? []);
-                }
-    
-                return [
-                    'id' => $notification->id,
-                    'type' => $notification->type,
-                    'message' => $translatedMessage,
-                    
-                    'is_read' => $notification->read(),
-                    'created_at' => $notification->created_at->toIso8601String(),
-                    'created_at_human' => $notification->created_at->diffForHumans(),
-                ];
-            });
-    
-            return apiSuccess('تم إرجاع الإشعارات بنجاح', $notifications);
+            return apiSuccess('تم إرجاع الإشعارات بنجاح', [
+                'unread_count' => $user->unreadNotifications->count(),
+                'notifications' => NotificationResource::collection($notifications),
+            ]);
         }catch(Exception $e){
             Log::error('Failed to fetch notifications: ' . $e->getMessage(), [
                 'file' => $e->getFile(),

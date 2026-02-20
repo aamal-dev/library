@@ -8,4 +8,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Schedule::command('library:notify-waiting-list')->everyThreeHours();
 Schedule::command('library:send-overdue-notifications')->dailyAt('00:00');

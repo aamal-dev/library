@@ -29,6 +29,19 @@ class Transaction extends Model
         'extra_price' => 'decimal:2',
     ];
 
+    public function processOverdueStep($dailyFineAmount)
+    {
+        $this->extra_price += $dailyFineAmount;
+
+        if($this->extra_price >= $this->mortgage){
+            $this->status = 'expired';
+
+            $this->book()->decrement('total_copies');
+        }
+
+        $this->save();
+    }
+
     public function bill(): BelongsTo
     {
         return $this->belongsTo(Bill::class);

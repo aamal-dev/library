@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\WaitingListStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained();
             $table->foreignId('book_id')->constrained();
             $table->unique(['book_id' , 'customer_id']);
+            $table->string('status', 15)->default(WaitingListStatusEnum::PENDING);
             $table->timestamps();
         });
     }

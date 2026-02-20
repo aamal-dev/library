@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ِAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,4 +46,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('books', BookController::class)->except('index', 'show');
         Route::apiResource('authors', AuthorController::class)->except('index', 'show');
     });
+
+    Route::controller(NotificationController::class)
+        ->prefix('notifications')->group(function () {
+            Route::get('',  'index');
+            Route::patch('/mark-all-as-read',  'markAllAsRead');
+            Route::patch('/{id}',  'markAsRead');
+        });
 });
